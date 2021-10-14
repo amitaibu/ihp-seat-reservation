@@ -35,3 +35,13 @@ data SeatCategoriesController
     | UpdateSeatCategoryAction {seatCategoryId :: !(Id SeatCategory)}
     | DeleteSeatCategoryAction {seatCategoryId :: !(Id SeatCategory)}
     deriving (Eq, Show, Data)
+
+data ReservationsController
+    = ReservationsAction  {libraryOpeningId :: !(Id LibraryOpening)}
+    | NewReservationAction  {libraryOpeningId :: !(Id LibraryOpening)}
+    | ShowReservationAction { reservationId :: !(Id Reservation) }
+    | CreateReservationAction
+    | EditReservationAction { reservationId :: !(Id Reservation) }
+    | UpdateReservationAction { reservationId :: !(Id Reservation) }
+    | DeleteReservationAction { reservationId :: !(Id Reservation) }
+    deriving (Eq, Show, Data)
