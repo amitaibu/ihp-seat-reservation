@@ -27,7 +27,7 @@ instance Controller LibraryOpeningsController where
         library <- fetch (get #libraryId libraryOpening)
         reservations <- query @Reservation
                 |> filterWhere (#libraryOpeningId, libraryOpeningId)
-                |> orderByDesc #seatNumber
+                |> orderByDesc #createdAt
                 |> fetch
         render ShowView{..}
 

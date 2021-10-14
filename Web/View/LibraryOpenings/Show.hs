@@ -48,7 +48,7 @@ renderReservationsTable libraryOpening reservations = [hsx|
                 </tr>
             </thead>
             <tbody>
-                {forEachWithIndex reservations renderReservation}
+                {forEachWithIndex reservations (renderReservation (length reservations))}
             </tbody>
         </table>
 
@@ -57,9 +57,9 @@ renderReservationsTable libraryOpening reservations = [hsx|
 
 
 
-renderReservation (index, reservation) = [hsx|
+renderReservation totalReservations (index, reservation) = [hsx|
         <tr>
-            <td>{index + 1}</td>
+            <td>{totalReservations - index}</td>
             <td>Seat {get #seatNumber reservation}</td>
             <td>{get #studentIdentifier reservation}</td>
             <td>{get #status reservation}</td>
