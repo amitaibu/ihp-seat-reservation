@@ -20,8 +20,7 @@ instance View NewView where
 
 renderForm :: Reservation -> Html
 renderForm reservation = formFor reservation [hsx|
-    {(textField #libraryOpeningId)}
-    {(textField #seatNumber)}
-    {(textField #studentIdentifier)}
+    {(hiddenField #libraryOpeningId)}
+    {(textField #studentIdentifier) { required = True, helpText = "Enter a dummy Student ID. If it starts with 0000 it will be rejected.", fieldLabel ="Student ID" }}
     {submitButton}
 |]
