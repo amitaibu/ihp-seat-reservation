@@ -69,6 +69,6 @@ renderReservation totalReservations (index, reservation) = [hsx|
     |]
     where seatContent =
                 case get #status reservation of
-                Queued -> [hsx|Waiting for seat...|]
-                Accepted -> [hsx|Seat {get #seatNumber reservation}|]
-                Rejected -> [hsx|No seat|]
+                    Queued -> [hsx|Waiting for seat...|]
+                    Accepted -> [hsx|Seat {get #seatNumber reservation}|]
+                    Rejected -> [hsx|No seat|]

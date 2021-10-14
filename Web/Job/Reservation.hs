@@ -30,7 +30,7 @@ instance Job ReservationJob where
 
 
                     pure ()
-                Right bid -> do
+                Right reservation -> do
                     reservation <-
                         reservation
                             |> set #status Accepted
@@ -38,7 +38,7 @@ instance Job ReservationJob where
 
 
                     -- Don't delay the job for sending an email.
-                    -- forkIO $ sendMail ConfirmationMail{..}
+                    forkIO $ sendMail ConfirmationMail{..}
 
                     pure ()
 
