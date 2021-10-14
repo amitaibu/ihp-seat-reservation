@@ -12,3 +12,39 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 
+SET SESSION AUTHORIZATION DEFAULT;
+
+ALTER TABLE public.libraries DISABLE TRIGGER ALL;
+
+
+ALTER TABLE public.libraries ENABLE TRIGGER ALL;
+
+
+ALTER TABLE public.library_openings DISABLE TRIGGER ALL;
+
+
+
+ALTER TABLE public.library_openings ENABLE TRIGGER ALL;
+
+
+ALTER TABLE public.reservations DISABLE TRIGGER ALL;
+
+
+
+ALTER TABLE public.reservations ENABLE TRIGGER ALL;
+
+
+ALTER TABLE public.seat_categories DISABLE TRIGGER ALL;
+
+
+
+ALTER TABLE public.seat_categories ENABLE TRIGGER ALL;
+
+
+ALTER TABLE public.users DISABLE TRIGGER ALL;
+
+
+
+ALTER TABLE public.users ENABLE TRIGGER ALL;
+
+

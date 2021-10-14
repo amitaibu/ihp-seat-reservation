@@ -22,8 +22,8 @@ CREATE TABLE reservations (
 CREATE TABLE library_openings (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-    start_time TIMESTAMP WITH TIME ZONE NOT NULL,
-    end_time TIMESTAMP WITH TIME ZONE NOT NULL,
+    start_time TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    end_time TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     library_id UUID NOT NULL
 );
 CREATE TABLE seat_categories (
