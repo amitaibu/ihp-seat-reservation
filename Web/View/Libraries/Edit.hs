@@ -18,5 +18,6 @@ instance View EditView where
 renderForm :: Library -> Html
 renderForm library = formFor library [hsx|
     {(textField #title)}
+    {(numberField #totalNumberOfSeats)}
     {submitButton}
 |]

@@ -16,15 +16,16 @@ instance View ShowView where
             </ol>
         </nav>
         <h1>Library Opening for {get #title library}</h1>
-        <div>{get #startTime libraryOpening |> dateTime} - {get #endTime libraryOpening |> dateTime}</div>
+        <div class="mb-4 mt-4">Time slot: {get #startTime libraryOpening |> dateTime} - {get #endTime libraryOpening |> dateTime}</div>
+        <div class="mb-4 ">Total Seats in Library: {get #totalNumberOfSeats library}</div>
 
         {renderReservations libraryOpening reservations}
+
     |]
 
 
 renderReservations libraryOpening reservations =
     [hsx|
-        <h2>Reservations</h2>
         <div>
             <a href={pathTo $ NewReservationAction (get #id libraryOpening) } class="btn btn-primary mb-4">+ New Reservation</a>
         </div>
@@ -60,10 +61,14 @@ renderReservationsTable libraryOpening reservations = [hsx|
 renderReservation totalReservations (index, reservation) = [hsx|
         <tr>
             <td>{totalReservations - index}</td>
-            <td>Seat {get #seatNumber reservation}</td>
+            <td>{seatContent}</td>
             <td>{get #studentIdentifier reservation}</td>
             <td>{get #status reservation}</td>
         </tr>
 
-
     |]
+    where seatContent =
+                case get #status reservation of
+                Queued -> [hsx|Waiting for seat...|]
+                Accepted -> [hsx|Seat {get #seatNumber reservation}|]
+                Rejected -> [hsx|No seat|]

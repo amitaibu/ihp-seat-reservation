@@ -33,6 +33,7 @@ instance Controller LibrariesController where
         library <- fetch libraryId
         library
             |> buildLibrary
+            |> validateField #totalNumberOfSeats (isGreaterThan 0)
             |> ifValid \case
                 Left library -> render EditView { .. }
                 Right library -> do
@@ -44,6 +45,7 @@ instance Controller LibrariesController where
         let library = newRecord @Library
         library
             |> buildLibrary
+            |> validateField #totalNumberOfSeats (isGreaterThan 0)
             |> ifValid \case
                 Left library -> render NewView { .. }
                 Right library -> do
@@ -58,4 +60,4 @@ instance Controller LibrariesController where
         redirectTo LibrariesAction
 
 buildLibrary library = library
-    |> fill @'["title"]
+    |> fill @'["title", "totalNumberOfSeats"]

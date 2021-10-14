@@ -9,3 +9,4 @@ ALTER TABLE reservation_jobs ADD COLUMN reservation_id UUID NOT NULL;
 ALTER TABLE reservation_jobs ADD CONSTRAINT reservation_jobs_ref_reservation_id FOREIGN KEY (reservation_id) REFERENCES reservations (id) ON DELETE NO ACTION;
 CREATE INDEX reservation_jobs_reservation_id_index ON reservation_jobs (reservation_id);
 ALTER TABLE reservations ADD COLUMN status reservation_status NOT NULL;
+ALTER TABLE libraries ADD COLUMN total_number_of_seats INT NOT NULL;

@@ -51,7 +51,9 @@ instance Controller ReservationsController where
                     libraryOpening <- fetch (get #libraryOpeningId reservation)
                     render NewView { .. }
                 Right reservation -> do
-                    reservation <- reservation |> createRecord
+                    reservation <- reservation
+                        |> set #status Queued
+                        |> createRecord
 
                     -- Create a Job for the Reservation to be processed.
                     newRecord @ReservationJob

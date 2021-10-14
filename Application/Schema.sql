@@ -10,7 +10,8 @@ CREATE TABLE users (
 CREATE TABLE libraries (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    total_number_of_seats INT NOT NULL
 );
 CREATE TABLE reservations (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
