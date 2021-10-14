@@ -1,7 +1,10 @@
 module Web.View.LibraryOpenings.Show where
 import Web.View.Prelude
 
-data ShowView = ShowView { libraryOpening :: LibraryOpening }
+data ShowView = ShowView
+    { libraryOpening :: LibraryOpening
+    , library :: Library
+    }
 
 instance View ShowView where
     html ShowView { .. } = [hsx|
@@ -11,6 +14,6 @@ instance View ShowView where
                 <li class="breadcrumb-item active">Show LibraryOpening</li>
             </ol>
         </nav>
-        <h1>Show LibraryOpening</h1>
-        <p>{libraryOpening}</p>
+        <h1>Library Opening for {get #title library}</h1>
+        <div>{get #startTime libraryOpening |> dateTime} - {get #endTime libraryOpening |> dateTime}</div>
     |]

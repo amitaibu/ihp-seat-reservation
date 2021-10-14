@@ -24,6 +24,7 @@ instance Controller LibraryOpeningsController where
 
     action ShowLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
+        library <- fetch (get #libraryId libraryOpening)
         render ShowView{..}
 
     action EditLibraryOpeningAction{libraryOpeningId} = do
