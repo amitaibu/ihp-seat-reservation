@@ -1,7 +1,10 @@
 module Web.View.Libraries.Show where
 import Web.View.Prelude
 
-data ShowView = ShowView { library :: Library }
+data ShowView = ShowView
+    { library :: Library
+    , libraryOpenings :: [LibraryOpening]
+    }
 
 instance View ShowView where
     html ShowView { .. } = [hsx|
@@ -12,5 +15,45 @@ instance View ShowView where
             </ol>
         </nav>
         <h1>{get #title library}</h1>
+
+        {renderLibraryOpenings library libraryOpenings}
+
     |]
 
+
+renderLibraryOpenings library libraryOpenings = [hsx|
+        <h2>Library Openings</h2>
+        <div>
+            <a href={pathTo $ NewLibraryOpeningAction (get #id library) } class="btn btn-primary ml-4">+ New</a>
+        </div>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Ops</th>
+                </tr>
+            </thead>
+            <tbody>
+                {forEachWithIndex libraryOpenings renderLibraryOpening}
+            </tbody>
+        </table>
+
+
+
+    |]
+
+
+renderLibraryOpening (index, libraryOpening) = [hsx|
+        <tr>
+            <td>{index + 1}</td>
+            <td>{get #startTime libraryOpening}</td>
+            <td>{get #endTime libraryOpening}</td>
+            <td><a href={EditLibraryOpeningAction (get #id libraryOpening)}>Edit</a></td>
+        </tr>
+
+
+    |]
