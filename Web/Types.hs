@@ -37,8 +37,8 @@ data SeatCategoriesController
     deriving (Eq, Show, Data)
 
 data ReservationsController
-    = ReservationsAction
-    | NewReservationAction
+    = ReservationsAction  {libraryOpeningId :: !(Id LibraryOpening)}
+    | NewReservationAction  {libraryOpeningId :: !(Id LibraryOpening)}
     | ShowReservationAction { reservationId :: !(Id Reservation) }
     | CreateReservationAction
     | EditReservationAction { reservationId :: !(Id Reservation) }

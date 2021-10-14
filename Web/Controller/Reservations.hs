@@ -8,20 +8,24 @@ import Web.View.Reservations.Show
 import Web.Mail.Reservations.Confirmation
 
 instance Controller ReservationsController where
-    action ReservationsAction = do
+    action ReservationsAction {..} = do
         reservations <- query @Reservation |> fetch
+        libraryOpening <- fetch libraryOpeningId
         render IndexView { .. }
 
-    action NewReservationAction = do
-        let reservation = newRecord
+    action NewReservationAction {..} = do
+        let reservation = newRecord |> set #libraryOpeningId libraryOpeningId
+        libraryOpening <- fetch libraryOpeningId
         render NewView { .. }
 
     action ShowReservationAction { reservationId } = do
         reservation <- fetch reservationId
+        libraryOpening <- fetch (get #libraryOpeningId reservation)
         render ShowView { .. }
 
     action EditReservationAction { reservationId } = do
         reservation <- fetch reservationId
+        libraryOpening <- fetch (get #libraryOpeningId reservation)
         render EditView { .. }
 
     action UpdateReservationAction { reservationId } = do
@@ -29,7 +33,9 @@ instance Controller ReservationsController where
         reservation
             |> buildReservation
             |> ifValid \case
-                Left reservation -> render EditView { .. }
+                Left reservation -> do
+                    libraryOpening <- fetch (get #libraryOpeningId reservation)
+                    render EditView { .. }
                 Right reservation -> do
                     reservation <- reservation |> updateRecord
                     setSuccessMessage "Reservation updated"
@@ -40,17 +46,19 @@ instance Controller ReservationsController where
         reservation
             |> buildReservation
             |> ifValid \case
-                Left reservation -> render NewView { .. } 
+                Left reservation -> do
+                    libraryOpening <- fetch (get #libraryOpeningId reservation)
+                    render NewView { .. }
                 Right reservation -> do
                     reservation <- reservation |> createRecord
                     setSuccessMessage "Reservation created"
-                    redirectTo ReservationsAction
+                    redirectTo $ ReservationsAction (get #libraryOpeningId reservation)
 
     action DeleteReservationAction { reservationId } = do
         reservation <- fetch reservationId
         deleteRecord reservation
         setSuccessMessage "Reservation deleted"
-        redirectTo ReservationsAction
+        redirectTo $ ReservationsAction (get #libraryOpeningId reservation)
 
 buildReservation reservation = reservation
     |> fill @["libraryOpeningId","seatNumber","studentIdentifier"]

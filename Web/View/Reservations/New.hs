@@ -1,13 +1,16 @@
 module Web.View.Reservations.New where
 import Web.View.Prelude
 
-data NewView = NewView { reservation :: Reservation }
+data NewView = NewView
+    { reservation :: Reservation
+    , libraryOpening :: LibraryOpening
+    }
 
 instance View NewView where
     html NewView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href={ReservationsAction}>Reservations</a></li>
+                <li class="breadcrumb-item"><a href={ReservationsAction (get #id libraryOpening)}>Reservations</a></li>
                 <li class="breadcrumb-item active">New Reservation</li>
             </ol>
         </nav>

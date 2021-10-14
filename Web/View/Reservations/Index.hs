@@ -1,16 +1,19 @@
 module Web.View.Reservations.Index where
 import Web.View.Prelude
 
-data IndexView = IndexView { reservations :: [Reservation] }
+data IndexView = IndexView
+    { reservations :: [Reservation]
+    , libraryOpening :: LibraryOpening
+    }
 
 instance View IndexView where
     html IndexView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href={ReservationsAction}>Reservations</a></li>
+                <li class="breadcrumb-item active"><a href={ReservationsAction (get #id libraryOpening)}>Reservations</a></li>
             </ol>
         </nav>
-        <h1>Index <a href={pathTo NewReservationAction} class="btn btn-primary ml-4">+ New</a></h1>
+        <h1>Index <a href={pathTo $ NewReservationAction (get #id libraryOpening)} class="btn btn-primary ml-4">+ New</a></h1>
         <div class="table-responsive">
             <table class="table">
                 <thead>
