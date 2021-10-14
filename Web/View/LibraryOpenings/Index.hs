@@ -1,16 +1,21 @@
 module Web.View.LibraryOpenings.Index where
+
 import Web.View.Prelude
 
-data IndexView = IndexView { libraryOpenings :: [LibraryOpening] }
+data IndexView = IndexView
+    { libraryOpenings :: [LibraryOpening]
+    , libraryId :: Id Library
+    }
 
 instance View IndexView where
-    html IndexView { .. } = [hsx|
+    html IndexView{..} =
+        [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href={LibraryOpeningsAction}>LibraryOpenings</a></li>
+                <li class="breadcrumb-item active"><a href={LibraryOpeningAction libraryId}>LibraryOpenings</a></li>
             </ol>
         </nav>
-        <h1>Index <a href={pathTo NewLibraryOpeningAction} class="btn btn-primary ml-4">+ New</a></h1>
+        <h1>Index <a href={pathTo $ NewLibraryOpeningAction libraryId} class="btn btn-primary ml-4">+ New</a></h1>
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -26,9 +31,9 @@ instance View IndexView where
         </div>
     |]
 
-
 renderLibraryOpening :: LibraryOpening -> Html
-renderLibraryOpening libraryOpening = [hsx|
+renderLibraryOpening libraryOpening =
+    [hsx|
     <tr>
         <td>{libraryOpening}</td>
         <td><a href={ShowLibraryOpeningAction (get #id libraryOpening)}>Show</a></td>

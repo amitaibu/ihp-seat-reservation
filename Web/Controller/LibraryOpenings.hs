@@ -1,54 +1,56 @@
 module Web.Controller.LibraryOpenings where
 
 import Web.Controller.Prelude
-import Web.View.LibraryOpenings.New
 import Web.View.LibraryOpenings.Edit
+import Web.View.LibraryOpenings.Index
+import Web.View.LibraryOpenings.New
 import Web.View.LibraryOpenings.Show
 
 instance Controller LibraryOpeningsController where
-    action SeatCategoriesAction {..} = do
-        seatCategories <- query @SeatCategory |> filterWhere (#libraryId, libraryId) |> fetch
-        render IndexView { .. }
+    action LibraryOpeningAction{..} = do
+        libraryOpenings <- query @LibraryOpening |> filterWhere (#libraryId, libraryId) |> fetch
+        render IndexView{..}
 
-    action NewLibraryOpeningAction {..} = do
+    action NewLibraryOpeningAction{..} = do
         let libraryOpening = newRecord |> set #libraryId libraryId
-        render NewView { .. }
+        render NewView{..}
 
-    action ShowLibraryOpeningAction { libraryOpeningId } = do
+    action ShowLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
-        render ShowView { .. }
+        render ShowView{..}
 
-    action EditLibraryOpeningAction { libraryOpeningId } = do
+    action EditLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
-        render EditView { .. }
+        render EditView{..}
 
-    action UpdateLibraryOpeningAction { libraryOpeningId } = do
+    action UpdateLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
         libraryOpening
             |> buildLibraryOpening
             |> ifValid \case
-                Left libraryOpening -> render EditView { .. }
+                Left libraryOpening -> render EditView{..}
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> updateRecord
                     setSuccessMessage "LibraryOpening updated"
-                    redirectTo EditLibraryOpeningAction { .. }
+                    redirectTo EditLibraryOpeningAction{..}
 
-    action CreateLibraryOpeningAction  = do
+    action CreateLibraryOpeningAction = do
         let libraryOpening = newRecord @LibraryOpening
         libraryOpening
             |> buildLibraryOpening
             |> ifValid \case
-                Left libraryOpening -> render NewView { .. }
+                Left libraryOpening -> render NewView{..}
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> createRecord
                     setSuccessMessage "LibraryOpening created"
                     redirectTo LibrariesAction
 
-    action DeleteLibraryOpeningAction { libraryOpeningId } = do
+    action DeleteLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
         deleteRecord libraryOpening
         setSuccessMessage "LibraryOpening deleted"
         redirectTo LibrariesAction
 
-buildLibraryOpening libraryOpening = libraryOpening
-    |> fill @["startTime","endTime","libraryId"]
+buildLibraryOpening libraryOpening =
+    libraryOpening
+        |> fill @["startTime", "endTime", "libraryId"]

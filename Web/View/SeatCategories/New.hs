@@ -1,10 +1,12 @@
 module Web.View.SeatCategories.New where
+
 import Web.View.Prelude
 
-data NewView = NewView { seatCategory :: SeatCategory }
+data NewView = NewView {seatCategory :: SeatCategory}
 
 instance View NewView where
-    html NewView { .. } = [hsx|
+    html NewView{..} =
+        [hsx|
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href={SeatCategoriesAction (get #libraryId seatCategory)}>SeatCategories</a></li>
@@ -16,7 +18,10 @@ instance View NewView where
     |]
 
 renderForm :: SeatCategory -> Html
-renderForm seatCategory = formFor seatCategory [hsx|
+renderForm seatCategory =
+    formFor
+        seatCategory
+        [hsx|
     {(textField #title)}
     {(textField #fromNumber)}
     {(textField #toNumber)}

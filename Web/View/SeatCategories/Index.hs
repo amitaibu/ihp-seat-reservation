@@ -1,16 +1,16 @@
 module Web.View.SeatCategories.Index where
+
 import Web.View.Prelude
 
-data IndexView = IndexView { seatCategories :: [SeatCategory] }
+data IndexView = IndexView
+    { seatCategories :: [SeatCategory]
+    , libraryId :: Id Library
+    }
 
 instance View IndexView where
-    html IndexView { .. } = [hsx|
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href={SeatCategoriesAction (get #libraryId seatCategory)}>SeatCategories</a></li>
-            </ol>
-        </nav>
-        <h1>Index <a href={pathTo NewSeatCategoryAction} class="btn btn-primary ml-4">+ New</a></h1>
+    html IndexView{..} =
+        [hsx|
+
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -26,9 +26,9 @@ instance View IndexView where
         </div>
     |]
 
-
 renderSeatCategory :: SeatCategory -> Html
-renderSeatCategory seatCategory = [hsx|
+renderSeatCategory seatCategory =
+    [hsx|
     <tr>
         <td>{seatCategory}</td>
         <td><a href={ShowSeatCategoryAction (get #id seatCategory)}>Show</a></td>
