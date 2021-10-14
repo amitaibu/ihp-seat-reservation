@@ -18,8 +18,7 @@ data LibrariesController
     deriving (Eq, Show, Data)
 
 data LibraryOpeningsController
-    = LibraryOpeningsAction
-    | NewLibraryOpeningAction
+    = NewLibraryOpeningAction { libraryId :: !(Id Library) }
     | ShowLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
     | CreateLibraryOpeningAction
     | EditLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }

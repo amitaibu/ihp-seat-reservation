@@ -11,6 +11,6 @@ instance View ShowView where
                 <li class="breadcrumb-item active">Show Library</li>
             </ol>
         </nav>
-        <h1>Show Library</h1>
-        <p>{library}</p>
+        <h1>{get #title library}</h1>
     |]
+

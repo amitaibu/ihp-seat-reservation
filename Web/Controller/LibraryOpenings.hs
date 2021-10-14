@@ -1,18 +1,13 @@
 module Web.Controller.LibraryOpenings where
 
 import Web.Controller.Prelude
-import Web.View.LibraryOpenings.Index
 import Web.View.LibraryOpenings.New
 import Web.View.LibraryOpenings.Edit
 import Web.View.LibraryOpenings.Show
 
 instance Controller LibraryOpeningsController where
-    action LibraryOpeningsAction = do
-        libraryOpenings <- query @LibraryOpening |> fetch
-        render IndexView { .. }
-
-    action NewLibraryOpeningAction = do
-        let libraryOpening = newRecord
+    action NewLibraryOpeningAction {..} = do
+        let libraryOpening = newRecord |> set #libraryId libraryId
         render NewView { .. }
 
     action ShowLibraryOpeningAction { libraryOpeningId } = do
@@ -34,22 +29,22 @@ instance Controller LibraryOpeningsController where
                     setSuccessMessage "LibraryOpening updated"
                     redirectTo EditLibraryOpeningAction { .. }
 
-    action CreateLibraryOpeningAction = do
+    action CreateLibraryOpeningAction  = do
         let libraryOpening = newRecord @LibraryOpening
         libraryOpening
             |> buildLibraryOpening
             |> ifValid \case
-                Left libraryOpening -> render NewView { .. } 
+                Left libraryOpening -> render NewView { .. }
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> createRecord
                     setSuccessMessage "LibraryOpening created"
-                    redirectTo LibraryOpeningsAction
+                    redirectTo LibrariesAction
 
     action DeleteLibraryOpeningAction { libraryOpeningId } = do
         libraryOpening <- fetch libraryOpeningId
         deleteRecord libraryOpening
         setSuccessMessage "LibraryOpening deleted"
-        redirectTo LibraryOpeningsAction
+        redirectTo LibrariesAction
 
 buildLibraryOpening libraryOpening = libraryOpening
     |> fill @["startTime","endTime","libraryId"]
