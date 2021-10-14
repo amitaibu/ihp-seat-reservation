@@ -5,6 +5,7 @@ import Web.View.Reservations.Index
 import Web.View.Reservations.New
 import Web.View.Reservations.Edit
 import Web.View.Reservations.Show
+import Web.Mail.Reservations.Confirmation
 
 instance Controller ReservationsController where
     action ReservationsAction = do
