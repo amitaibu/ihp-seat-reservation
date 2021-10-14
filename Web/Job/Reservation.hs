@@ -4,6 +4,7 @@ import Web.Controller.Prelude
 import Control.Concurrent (forkIO, threadDelay)
 import Web.Mail.Reservations.Confirmation
 import Web.Controller.Reservations
+import Data.Set (fromList, toList, delete)
 
 
 instance Job ReservationJob where
@@ -14,8 +15,12 @@ instance Job ReservationJob where
 
         -- Other reservations
         otherReservations <- query @Reservation
+            -- Related Reservations.
+            |> filterWhere (#libraryOpeningId, get #id libraryOpening)
             -- Exclude current reservation.
             |> filterWhereNot (#id, get #id reservation)
+            -- Fetch only Accepted items.
+            |> filterWhere (#status, Accepted)
             |> fetch
 
         reservation
@@ -49,6 +54,10 @@ instance Job ReservationJob where
 assignSeatNumber library otherReservations reservation =
     let
         assignedSeatNumbers = map (get #seatNumber) otherReservations
+            |> Data.Set.fromList
+            |> Data.Set.delete 0
+            |> Data.Set.toList
+
         totalNumberOfSeats = get #totalNumberOfSeats library
     in
     if length assignedSeatNumbers >= totalNumberOfSeats

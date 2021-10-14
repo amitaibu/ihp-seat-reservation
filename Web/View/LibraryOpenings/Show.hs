@@ -20,9 +20,7 @@ instance View ShowView where
         <div class="mb-4 ">Total Seats in Library: {get #totalNumberOfSeats library}</div>
 
         {renderReservations libraryOpening reservations}
-
     |]
-
 
 renderReservations libraryOpening reservations =
     [hsx|
