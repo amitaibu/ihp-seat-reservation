@@ -29,6 +29,9 @@ instance Controller LibraryOpeningsController where
                 |> filterWhere (#libraryOpeningId, libraryOpeningId)
                 |> orderByDesc #createdAt
                 |> fetch
+
+        trackTableRead "reservations"
+
         render ShowView{..}
 
     action EditLibraryOpeningAction{libraryOpeningId} = do
