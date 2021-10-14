@@ -12,3 +12,6 @@ instance AutoRoute LibraryOpeningsController
 
 instance AutoRoute SeatCategoriesController
 
+
+instance AutoRoute ReservationsController
+
