@@ -31,6 +31,7 @@ instance Controller ReservationsController where
     action UpdateReservationAction { reservationId } = do
         reservation <- fetch reservationId
         reservation
+            |> validateStudentIdentifer
             |> buildReservation
             |> ifValid \case
                 Left reservation -> do
@@ -51,7 +52,13 @@ instance Controller ReservationsController where
                     render NewView { .. }
                 Right reservation -> do
                     reservation <- reservation |> createRecord
-                    setSuccessMessage "Reservation created"
+
+                    -- Create a Job for the Reservation to be processed.
+                    newRecord @ReservationJob
+                        |> set #reservationId (get #id reservation)
+                        |> create
+
+                    setSuccessMessage "Reservation request registered"
                     redirectTo $ ReservationsAction (get #libraryOpeningId reservation)
 
     action DeleteReservationAction { reservationId } = do
@@ -62,3 +69,10 @@ instance Controller ReservationsController where
 
 buildReservation reservation = reservation
     |> fill @["libraryOpeningId","seatNumber","studentIdentifier"]
+
+validateStudentIdentifer reservation =
+    if "0000" `isPrefixOf` get #studentIdentifier reservation
+        then reservation |> attachFailure #studentIdentifier "Student ID is not valid"
+        else reservation
+
+
