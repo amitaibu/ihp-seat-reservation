@@ -27,6 +27,9 @@ instance Job ReservationJob where
                             |> set #status Accepted
                             |> updateRecord
 
+                    libraryOpening <- fetch (get #libraryOpeningId reservation)
+                    library <- fetch (get #libraryId libraryOpening)
+
                     -- Don't delay the job for sending an email.
                     forkIO $ sendMail ConfirmationMail{..}
 

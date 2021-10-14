@@ -25,6 +25,10 @@ instance Controller LibraryOpeningsController where
     action ShowLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
         library <- fetch (get #libraryId libraryOpening)
+        reservations <- query @Reservation
+                |> filterWhere (#libraryOpeningId, libraryOpeningId)
+                |> orderByDesc #seatNumber
+                |> fetch
         render ShowView{..}
 
     action EditLibraryOpeningAction{libraryOpeningId} = do
