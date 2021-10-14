@@ -31,7 +31,6 @@ instance Controller ReservationsController where
     action UpdateReservationAction { reservationId } = do
         reservation <- fetch reservationId
         reservation
-            |> validateStudentIdentifer
             |> buildReservation
             |> ifValid \case
                 Left reservation -> do
@@ -46,6 +45,7 @@ instance Controller ReservationsController where
         let reservation = newRecord @Reservation
         reservation
             |> buildReservation
+            |> validateStudentIdentifer
             |> ifValid \case
                 Left reservation -> do
                     libraryOpening <- fetch (get #libraryOpeningId reservation)
@@ -59,7 +59,7 @@ instance Controller ReservationsController where
                         |> create
 
                     setSuccessMessage "Reservation request registered"
-                    redirectTo $ ReservationsAction (get #libraryOpeningId reservation)
+                    redirectTo $ ShowLibraryOpeningAction (get #libraryOpeningId reservation)
 
     action DeleteReservationAction { reservationId } = do
         reservation <- fetch reservationId
