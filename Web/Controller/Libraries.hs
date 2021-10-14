@@ -17,6 +17,12 @@ instance Controller LibrariesController where
 
     action ShowLibraryAction { libraryId } = do
         library <- fetch libraryId
+
+        libraryOpenings <- query @LibraryOpening
+                            |> filterWhere (#libraryId, libraryId)
+                            |> orderByDesc #startTime
+                            |>fetch
+
         render ShowView { .. }
 
     action EditLibraryAction { libraryId } = do
@@ -39,7 +45,7 @@ instance Controller LibrariesController where
         library
             |> buildLibrary
             |> ifValid \case
-                Left library -> render NewView { .. } 
+                Left library -> render NewView { .. }
                 Right library -> do
                     library <- library |> createRecord
                     setSuccessMessage "Library created"
