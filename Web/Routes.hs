@@ -9,3 +9,6 @@ instance AutoRoute LibrariesController
 
 instance AutoRoute LibraryOpeningsController
 
+
+instance AutoRoute SeatCategoriesController
+

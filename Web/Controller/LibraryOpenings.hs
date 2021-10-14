@@ -6,6 +6,10 @@ import Web.View.LibraryOpenings.Edit
 import Web.View.LibraryOpenings.Show
 
 instance Controller LibraryOpeningsController where
+    action SeatCategoriesAction {..} = do
+        seatCategories <- query @SeatCategory |> filterWhere (#libraryId, libraryId) |> fetch
+        render IndexView { .. }
+
     action NewLibraryOpeningAction {..} = do
         let libraryOpening = newRecord |> set #libraryId libraryId
         render NewView { .. }

@@ -16,6 +16,7 @@ SET SESSION AUTHORIZATION DEFAULT;
 
 ALTER TABLE public.libraries DISABLE TRIGGER ALL;
 
+INSERT INTO public.libraries (id, created_at, title) VALUES ('478fb150-0702-4a34-8b10-28c78f6dc64c', '2021-10-14 16:41:24.175868+03', 'Lib1');
 
 
 ALTER TABLE public.libraries ENABLE TRIGGER ALL;

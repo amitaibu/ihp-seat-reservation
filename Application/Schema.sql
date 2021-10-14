@@ -30,9 +30,12 @@ CREATE TABLE seat_categories (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     from_number INT NOT NULL,
-    to_number INT NOT NULL
+    to_number INT NOT NULL,
+    library_id UUID NOT NULL
 );
 CREATE INDEX reservations_library_opening_id_index ON reservations (library_opening_id);
 CREATE INDEX library_openings_library_id_index ON library_openings (library_id);
+CREATE INDEX seat_categories_library_id_index ON seat_categories (library_id);
 ALTER TABLE library_openings ADD CONSTRAINT library_openings_ref_library_id FOREIGN KEY (library_id) REFERENCES libraries (id) ON DELETE NO ACTION;
 ALTER TABLE reservations ADD CONSTRAINT reservations_ref_library_opening_id FOREIGN KEY (library_opening_id) REFERENCES library_openings (id) ON DELETE NO ACTION;
+ALTER TABLE seat_categories ADD CONSTRAINT seat_categories_ref_library_id FOREIGN KEY (library_id) REFERENCES libraries (id) ON DELETE NO ACTION;

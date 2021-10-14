@@ -18,10 +18,21 @@ data LibrariesController
     deriving (Eq, Show, Data)
 
 data LibraryOpeningsController
-    = NewLibraryOpeningAction { libraryId :: !(Id Library) }
+    = LibraryOpeningAction { libraryId :: !(Id Library) }
+    | NewLibraryOpeningAction { libraryId :: !(Id Library) }
     | ShowLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
     | CreateLibraryOpeningAction
     | EditLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
     | UpdateLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
     | DeleteLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
+    deriving (Eq, Show, Data)
+
+data SeatCategoriesController
+    = SeatCategoriesAction { libraryId :: !(Id Library) }
+    | NewSeatCategoryAction { libraryId :: !(Id Library) }
+    | ShowSeatCategoryAction { seatCategoryId :: !(Id SeatCategory) }
+    | CreateSeatCategoryAction
+    | EditSeatCategoryAction { seatCategoryId :: !(Id SeatCategory) }
+    | UpdateSeatCategoryAction { seatCategoryId :: !(Id SeatCategory) }
+    | DeleteSeatCategoryAction { seatCategoryId :: !(Id SeatCategory) }
     deriving (Eq, Show, Data)
