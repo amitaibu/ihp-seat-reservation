@@ -6,3 +6,6 @@ import Web.Types
 -- Generator Marker
 instance AutoRoute LibrariesController
 
+
+instance AutoRoute LibraryOpeningsController
+

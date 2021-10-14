@@ -30,7 +30,7 @@ instance View IndexView where
 renderLibrary :: Library -> Html
 renderLibrary library = [hsx|
     <tr>
-        <td>{library}</td>
+        <td>{get #title library}</td>
         <td><a href={ShowLibraryAction (get #id library)}>Show</a></td>
         <td><a href={EditLibraryAction (get #id library)} class="text-muted">Edit</a></td>
         <td><a href={DeleteLibraryAction (get #id library)} class="js-delete text-muted">Delete</a></td>

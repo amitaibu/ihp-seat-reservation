@@ -16,3 +16,13 @@ data LibrariesController
     | UpdateLibraryAction { libraryId :: !(Id Library) }
     | DeleteLibraryAction { libraryId :: !(Id Library) }
     deriving (Eq, Show, Data)
+
+data LibraryOpeningsController
+    = LibraryOpeningsAction
+    | NewLibraryOpeningAction
+    | ShowLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
+    | CreateLibraryOpeningAction
+    | EditLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
+    | UpdateLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
+    | DeleteLibraryOpeningAction { libraryOpeningId :: !(Id LibraryOpening) }
+    deriving (Eq, Show, Data)
