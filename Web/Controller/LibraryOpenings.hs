@@ -12,7 +12,14 @@ instance Controller LibraryOpeningsController where
         render IndexView{..}
 
     action NewLibraryOpeningAction{..} = do
-        let libraryOpening = newRecord |> set #libraryId libraryId
+        current <- getCurrentTime
+        let libraryOpening = newRecord
+                |> set #libraryId libraryId
+                |> set #startTime current
+                -- Add one hour.
+                |> set #endTime (addUTCTime (secondsToNominalDiffTime $ 60 * 60) current)
+
+        library <- fetch libraryId
         render NewView{..}
 
     action ShowLibraryOpeningAction{libraryOpeningId} = do
@@ -39,7 +46,9 @@ instance Controller LibraryOpeningsController where
         libraryOpening
             |> buildLibraryOpening
             |> ifValid \case
-                Left libraryOpening -> render NewView{..}
+                Left libraryOpening -> do
+                    library <- fetch (get #libraryId libraryOpening)
+                    render NewView{..}
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> createRecord
                     setSuccessMessage "LibraryOpening created"

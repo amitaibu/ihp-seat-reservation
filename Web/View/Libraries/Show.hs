@@ -50,8 +50,8 @@ renderLibraryOpenings library libraryOpenings = [hsx|
 renderLibraryOpening (index, libraryOpening) = [hsx|
         <tr>
             <td>{index + 1}</td>
-            <td>{get #startTime libraryOpening}</td>
-            <td>{get #endTime libraryOpening}</td>
+            <td>{get #startTime libraryOpening |> dateTime}</td>
+            <td>{get #endTime libraryOpening |> dateTime}</td>
             <td><a href={ShowLibraryOpeningAction (get #id libraryOpening)}>Show</a></td>
         </tr>
 
