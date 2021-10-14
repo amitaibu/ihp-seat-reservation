@@ -51,13 +51,13 @@ assignSeatNumber library otherReservations reservation =
         assignedSeatNumbers = map (get #seatNumber) otherReservations
         totalNumberOfSeats = get #totalNumberOfSeats library
     in
-    if length assignedSeatNumbers == totalNumberOfSeats
+    if length assignedSeatNumbers >= totalNumberOfSeats
         then reservation |> attachFailure #seatNumber "All seats are already taken"
         else
             -- Find and assign a seat.
             let
                 allSeats = [1 .. totalNumberOfSeats]
-                seatNumber = (allSeats \\ assignedSeatNumbers) |> head |> fromMaybe 1
+                seatNumber = (allSeats \\ assignedSeatNumbers) |> head |> fromMaybe 0
             in
                 reservation |> set #seatNumber seatNumber
 
