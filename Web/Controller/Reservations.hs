@@ -52,13 +52,12 @@ instance Controller ReservationsController where
                     render NewView { .. }
                 Right reservation -> do
                     reservation <- reservation
-                        |> set #status Queued
+                        -- Indicate it's not in the queue yet.
+                        |> set #status PreQueue
                         |> createRecord
 
                     -- Create a Job for the Reservation to be processed.
-                    newRecord @ReservationJob
-                        |> set #reservationId (get #id reservation)
-                        |> create
+                    newRecord @ReservationJob |> create
 
                     setSuccessMessage "Reservation request registered"
                     redirectTo $ ShowLibraryOpeningAction (get #libraryOpeningId reservation)

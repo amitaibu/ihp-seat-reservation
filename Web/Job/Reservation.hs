@@ -5,49 +5,78 @@ import Control.Concurrent (forkIO, threadDelay)
 import Web.Mail.Reservations.Confirmation
 import Web.Controller.Reservations
 import Data.Set (fromList, toList, delete)
+import qualified IHP.Log as Log
 
 
 instance Job ReservationJob where
     perform ReservationJob { .. } = do
-        reservation <- fetch reservationId
-        libraryOpening <- fetch (get #libraryOpeningId reservation)
-        library <- fetch (get #libraryId libraryOpening)
+        -- Fetch older pre-queue Reservation.
+        maybeReservation <- query @Reservation
+            |> filterWhere (#status, PreQueue)
+            |> orderBy #createdAt
+            |> fetchOneOrNothing
 
-        -- Other reservations
-        otherReservations <- query @Reservation
-            -- Related Reservations.
-            |> filterWhere (#libraryOpeningId, get #id libraryOpening)
-            -- Exclude current reservation.
-            |> filterWhereNot (#id, get #id reservation)
-            -- Fetch only Accepted items.
-            |> filterWhere (#status, Accepted)
-            |> fetch
-
-        reservation
-            |> validateStudentIdentifer
-            |> assignSeatNumber library otherReservations
-            |> ifValid \case
-                Left reservation -> do
-
-                    reservation <- reservation
-                        |> set #status Rejected
-                        |> updateRecord
+        case maybeReservation of
+            Nothing -> pure ()
+            Just reservation -> do
+                -- Mark that it's being processed. @todo: rename to Processing.
+                reservation <- reservation
+                    |> set #status Queued
+                    |> updateRecord
 
 
-                    pure ()
-                Right reservation -> do
-                    reservation <-
-                        reservation
-                            |> set #status Accepted
-                            |> updateRecord
+                threadDelay (2 * 1000000)
+
+                libraryOpening <- fetch (get #libraryOpeningId reservation)
+                library <- fetch (get #libraryId libraryOpening)
+
+                -- Other reservations
+                otherReservations <- query @Reservation
+                    -- Related Reservations.
+                    |> filterWhere (#libraryOpeningId, get #id libraryOpening)
+                    -- Exclude current reservation.
+                    |> filterWhereNot (#id, get #id reservation)
+                    -- Fetch only Accepted items.
+                    |> filterWhere (#status, Accepted)
+                    |> orderBy #seatNumber
+                    |> fetch
+
+                reservation
+                    |> validateStudentIdentifer
+                    |> assignSeatNumber library otherReservations
+                    |> ifValid \case
+                        Left reservation -> do
+
+                            reservation <- reservation
+                                |> set #status Rejected
+                                |> updateRecord
 
 
-                    -- Don't delay the job for sending an email.
-                    forkIO $ sendMail ConfirmationMail{..}
+                            pure ()
+                        Right reservation -> do
+                            reservation <-
+                                reservation
+                                    |> set #status Accepted
+                                    |> updateRecord
 
-                    pure ()
 
-        pure ()
+                            -- Don't delay the job for sending an email.
+                            forkIO $ sendMail ConfirmationMail{..}
+
+                            pure ()
+
+                maybeReservation <- query @Reservation
+                    |> filterWhere (#status, PreQueue)
+                    |> orderBy #createdAt
+                    |> fetchOneOrNothing
+
+                case maybeReservation of
+                    -- No more pre-queue to process for now.
+                    Nothing -> pure ()
+                    -- Get another Job to process.
+                    Just _ ->  do
+                        newRecord @ReservationJob |> create
+                        pure ()
 
     maxAttempts = 1
 
