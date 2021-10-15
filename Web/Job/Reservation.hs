@@ -8,9 +8,7 @@ import Data.Set (fromList, toList, delete)
 
 
 instance Job ReservationJob where
-    perform ReservationJob { .. } = withTransaction do
-
-        sqlExec "LOCK TABLE reservations" ()
+    perform ReservationJob { .. } = do
         reservation <- fetch reservationId
         libraryOpening <- fetch (get #libraryOpeningId reservation)
         library <- fetch (get #libraryId libraryOpening)
