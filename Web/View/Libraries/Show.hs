@@ -38,18 +38,14 @@ renderLibraryOpenings library libraryOpenings = [hsx|
                 </tr>
             </thead>
             <tbody>
-                {forEachWithIndex libraryOpenings renderLibraryOpening}
+                {forEachWithIndex libraryOpenings (renderLibraryOpening (length libraryOpenings))}
             </tbody>
         </table>
-
-
-
     |]
 
-
-renderLibraryOpening (index, libraryOpening) = [hsx|
+renderLibraryOpening totalLibraryOpenings (index, libraryOpening) = [hsx|
         <tr>
-            <td>{index + 1}</td>
+            <td>{totalLibraryOpenings - index}</td>
             <td>{get #startTime libraryOpening |> dateTime}</td>
             <td>{get #endTime libraryOpening |> dateTime}</td>
             <td><a href={ShowLibraryOpeningAction (get #id libraryOpening)}>Show</a></td>
