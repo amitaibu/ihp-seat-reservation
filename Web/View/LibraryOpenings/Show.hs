@@ -49,6 +49,7 @@ renderReservationsTable libraryOpening reservations = [hsx|
                     <th>Seat number</th>
                     <th>Student ID</th>
                     <th>Status</th>
+                    <th>Ops</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +68,7 @@ renderReservation totalReservations (index, reservation) = [hsx|
             <td>{seatContent}</td>
             <td>{get #studentIdentifier reservation}</td>
             <td>{get #status reservation}</td>
+            <td><td><a href={DeleteReservationAction (get #id reservation)} class="js-delete text-muted">Delete</a></td></td>
         </tr>
 
     |]

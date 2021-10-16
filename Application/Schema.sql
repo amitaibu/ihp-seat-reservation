@@ -52,6 +52,6 @@ CREATE TABLE reservation_jobs (
 );
 CREATE INDEX reservation_jobs_reservation_id_index ON reservation_jobs (reservation_id);
 ALTER TABLE library_openings ADD CONSTRAINT library_openings_ref_library_id FOREIGN KEY (library_id) REFERENCES libraries (id) ON DELETE NO ACTION;
-ALTER TABLE reservation_jobs ADD CONSTRAINT reservation_jobs_ref_reservation_id FOREIGN KEY (reservation_id) REFERENCES reservations (id) ON DELETE NO ACTION;
+ALTER TABLE reservation_jobs ADD CONSTRAINT reservation_jobs_ref_reservation_id FOREIGN KEY (reservation_id) REFERENCES reservations (id) ON DELETE CASCADE;
 ALTER TABLE reservations ADD CONSTRAINT reservations_ref_library_opening_id FOREIGN KEY (library_opening_id) REFERENCES library_openings (id) ON DELETE NO ACTION;
 ALTER TABLE seat_categories ADD CONSTRAINT seat_categories_ref_library_id FOREIGN KEY (library_id) REFERENCES libraries (id) ON DELETE NO ACTION;

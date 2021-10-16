@@ -69,7 +69,7 @@ instance Controller ReservationsController where
         reservation <- fetch reservationId
         deleteRecord reservation
         setSuccessMessage "Reservation deleted"
-        redirectTo $ ReservationsAction (get #libraryOpeningId reservation)
+        redirectTo $ ShowLibraryOpeningAction (get #libraryOpeningId reservation)
 
 buildReservation reservation = reservation
     |> fill @["libraryOpeningId","seatNumber","studentIdentifier"]
