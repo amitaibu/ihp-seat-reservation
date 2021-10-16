@@ -13,7 +13,7 @@ instance View IndexView where
                 <li class="breadcrumb-item active"><a href={ReservationsAction (get #id libraryOpening)}>Reservations</a></li>
             </ol>
         </nav>
-        <h1>Index <a href={pathTo $ NewReservationAction (get #id libraryOpening)} class="btn btn-primary ml-4">+ New</a></h1>
+        <h1>Index <a href={pathTo $ NewReservationAction (get #id libraryOpening)} class="btn btn-primary">+ New</a></h1>
         <div class="table-responsive">
             <table class="table">
                 <thead>

@@ -24,7 +24,7 @@ instance View ShowView where
 renderLibraryOpenings library libraryOpenings = [hsx|
         <h2>Library Openings</h2>
         <div>
-            <a href={pathTo $ NewLibraryOpeningAction (get #id library) } class="btn btn-primary ml-4">+ New</a>
+            <a href={pathTo $ NewLibraryOpeningAction (get #id library) } class="btn btn-primary">+ New</a>
         </div>
 
 

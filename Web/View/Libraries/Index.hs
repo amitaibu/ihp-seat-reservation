@@ -7,10 +7,10 @@ instance View IndexView where
     html IndexView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href={LibrariesAction}>Libraries</a></li>
+                <li class="breadcrumb-item active"><a href={LibrariesAction}>Home</a></li>
             </ol>
         </nav>
-        <h1>Index <a href={pathTo NewLibraryAction} class="btn btn-primary ml-4">+ New</a></h1>
+        <h1>Index <a href={pathTo NewLibraryAction} class="btn btn-primary">+ New</a></h1>
         <div class="table-responsive">
             <table class="table">
                 <thead>

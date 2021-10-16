@@ -60,7 +60,7 @@ instance Controller LibraryOpeningsController where
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> createRecord
                     setSuccessMessage "Library Opening created"
-                    redirectTo LibrariesAction
+                    redirectTo $ ShowLibraryOpeningAction (get #id libraryOpening)
 
     action DeleteLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
