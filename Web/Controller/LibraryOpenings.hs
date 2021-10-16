@@ -46,7 +46,7 @@ instance Controller LibraryOpeningsController where
                 Left libraryOpening -> render EditView{..}
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> updateRecord
-                    setSuccessMessage "LibraryOpening updated"
+                    setSuccessMessage "Library Opening updated"
                     redirectTo EditLibraryOpeningAction{..}
 
     action CreateLibraryOpeningAction = do
@@ -59,13 +59,13 @@ instance Controller LibraryOpeningsController where
                     render NewView{..}
                 Right libraryOpening -> do
                     libraryOpening <- libraryOpening |> createRecord
-                    setSuccessMessage "LibraryOpening created"
+                    setSuccessMessage "Library Opening created"
                     redirectTo LibrariesAction
 
     action DeleteLibraryOpeningAction{libraryOpeningId} = do
         libraryOpening <- fetch libraryOpeningId
         deleteRecord libraryOpening
-        setSuccessMessage "LibraryOpening deleted"
+        setSuccessMessage "Library Opening deleted"
         redirectTo LibrariesAction
 
 buildLibraryOpening libraryOpening =

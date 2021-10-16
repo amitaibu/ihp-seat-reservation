@@ -16,6 +16,7 @@ instance Controller ReservationsController where
     action NewReservationAction {..} = do
         let reservation = newRecord |> set #libraryOpeningId libraryOpeningId
         libraryOpening <- fetch libraryOpeningId
+        library <- fetch (get #libraryId libraryOpening)
         render NewView { .. }
 
     action ShowReservationAction { reservationId } = do
@@ -49,6 +50,7 @@ instance Controller ReservationsController where
             |> ifValid \case
                 Left reservation -> do
                     libraryOpening <- fetch (get #libraryOpeningId reservation)
+                    library <- fetch (get #libraryId libraryOpening)
                     render NewView { .. }
                 Right reservation -> do
                     reservation <- reservation
