@@ -22,7 +22,7 @@ instance Controller LibraryOpeningsController where
         library <- fetch libraryId
         render NewView{..}
 
-    action ShowLibraryOpeningAction{libraryOpeningId} = do
+    action ShowLibraryOpeningAction{libraryOpeningId} = autoRefresh do
         libraryOpening <- fetch libraryOpeningId
         library <- fetch (get #libraryId libraryOpening)
         reservations <- query @Reservation
