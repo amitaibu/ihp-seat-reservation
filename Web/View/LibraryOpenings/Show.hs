@@ -17,10 +17,15 @@ instance View ShowView where
         </nav>
         <h1>Library Opening for {get #title library}</h1>
         <div class="mb-4 mt-4">Time slot: {get #startTime libraryOpening |> dateTime} - {get #endTime libraryOpening |> dateTime}</div>
-        <div class="mb-4 ">Total Seats in Library: {get #totalNumberOfSeats library}</div>
+        <div class="mb-4 "><strong>{acceptedReservations}</strong> out of <strong>{get #totalNumberOfSeats library}</strong> total seats</div>
 
         {renderReservations libraryOpening reservations}
     |]
+        where acceptedReservations =
+                reservations
+                    |> filter (\reservation -> get #status reservation == Accepted)
+                    |> length
+
 
 renderReservations libraryOpening reservations =
     [hsx|
