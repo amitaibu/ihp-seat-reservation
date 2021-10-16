@@ -51,6 +51,8 @@ instance Job ReservationJob where
 
     maxAttempts = 1
 
+    maxConcurrency = 1
+
 assignSeatNumber library otherReservations reservation =
     let
         assignedSeatNumbers = map (get #seatNumber) otherReservations
