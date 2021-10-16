@@ -9,6 +9,7 @@ import Data.Set (fromList, toList, delete)
 
 instance Job ReservationJob where
     perform ReservationJob { .. } = do
+        -- threadDelay (2 * 1000000)
         reservation <- fetch reservationId
         libraryOpening <- fetch (get #libraryOpeningId reservation)
         library <- fetch (get #libraryId libraryOpening)
