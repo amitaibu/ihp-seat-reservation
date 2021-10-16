@@ -1,3 +1,4 @@
+-- Write your SQL migration code in here
 -- This file is created by the IHP Schema Designer.
 -- When you generate a new migration, all changes in this file will be copied into your migration.
 -- -- Use http://localhost:8001/NewMigration or `new-migration` to generate a new migration.
