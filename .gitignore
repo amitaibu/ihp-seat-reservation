@@ -17,3 +17,6 @@ gen
 del
 static/prod.*
 Config/client_session_key.aes
+Application/Migration/unmigrated-changes.sql
+# Ignore locally checked out IHP version
+IHP
