@@ -25,7 +25,7 @@ instance Job ReservationJob where
             |> fetch
 
         reservation
-            |> validateStudentIdentifer
+            |> validateStudentIdentifier
             |> assignSeatNumber library otherReservations
             |> ifValid \case
                 Left reservation -> do

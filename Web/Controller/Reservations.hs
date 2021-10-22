@@ -83,11 +83,13 @@ validateStudentIdentifier reservation =
 
 
 
+{-| Error messages are handy for debugging and testing. The user should not see them.
+-}
 studentIdentifierResult :: Text -> Either Text Text
 studentIdentifierResult val =
     let
         rightVal = Right val
     in
     rightVal
-        >>= (\val ->  if "0000" `isPrefixOf` val then Left "ID shorter than 3" else rightVal)
+        >>= (\val ->  if "0000" `isPrefixOf` val then Left "Prefix of 0000 is not allowed" else rightVal)
         >>= (\val -> if Data.Text.length val < 3 then Left "ID shorter than 3" else rightVal)
