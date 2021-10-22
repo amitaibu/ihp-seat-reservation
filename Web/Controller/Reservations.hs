@@ -6,6 +6,8 @@ import Web.View.Reservations.New
 import Web.View.Reservations.Edit
 import Web.View.Reservations.Show
 import Web.Mail.Reservations.Confirmation
+import Data.Either (isLeft)
+import Data.Text (length)
 
 instance Controller ReservationsController where
     action ReservationsAction {..} = do
@@ -46,7 +48,7 @@ instance Controller ReservationsController where
         let reservation = newRecord @Reservation
         reservation
             |> buildReservation
-            |> validateStudentIdentifer
+            |> validateStudentIdentifier
             |> ifValid \case
                 Left reservation -> do
                     libraryOpening <- fetch (get #libraryOpeningId reservation)
@@ -74,9 +76,18 @@ instance Controller ReservationsController where
 buildReservation reservation = reservation
     |> fill @["libraryOpeningId","seatNumber","studentIdentifier"]
 
-validateStudentIdentifer reservation =
-    if "0000" `isPrefixOf` get #studentIdentifier reservation
+validateStudentIdentifier reservation =
+    if isLeft (studentIdentifierResult $ get #studentIdentifier reservation)
         then reservation |> attachFailure #studentIdentifier "Student ID is not valid"
         else reservation
 
 
+
+studentIdentifierResult :: Text -> Either Text Text
+studentIdentifierResult val =
+    let
+        rightVal = Right val
+    in
+    rightVal
+        >>= (\val ->  if "0000" `isPrefixOf` val then Left "ID shorter than 3" else rightVal)
+        >>= (\val -> if Data.Text.length val < 3 then Left "ID shorter than 3" else rightVal)
