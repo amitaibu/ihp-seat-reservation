@@ -36,11 +36,12 @@ tests = aroundAll (withIHPApp WebApplication config) do
                         |> set #libraryId (get #id library)
                         |> create
 
+                let libraryOpeningId = cs $ show $ get #id libraryOpening
+
                 let params =
                         [ ("studentIdentifier", "1234")
-                        , ("libraryOpening", cs $ show $ get #id libraryOpening)
+                        , ("libraryOpeningId", libraryOpeningId)
                         ]
-
 
                 response <- callActionWithParams CreateReservationAction params
 
@@ -48,18 +49,18 @@ tests = aroundAll (withIHPApp WebApplication config) do
                 count <- query @Reservation |> fetchCount
                 count `shouldBe` 1
 
-                -- -- Create a second Reservation.
-                -- let secondParams =
-                --         [ ("studentIdentifier", "4567")
-                --         , ("libraryOpening", cs uuid)
-                --         ]
+                -- Create a second Reservation.
+                let secondParams =
+                        [ ("studentIdentifier", "4567")
+                        , ("libraryOpeningId", libraryOpeningId)
+                        ]
 
-                -- withParams params do
-                --     response <- callAction CreateReservationAction
 
-                --     -- Only one Reservation should exist.
-                --     count <- query @Reservation |> fetchCount
-                --     count `shouldBe` 2
+                response <- callActionWithParams CreateReservationAction secondParams
+
+                -- Only one Reservation should exist.
+                count <- query @Reservation |> fetchCount
+                count `shouldBe` 2
 
 
 
