@@ -44,12 +44,11 @@ tests = aroundAll (withIHPApp WebApplication config) do
                         ]
 
 
-                withParams params $ do
-                    response <- callAction CreateReservationAction
+                response <- callActionWithParams CreateReservationAction params
 
-                    -- Only one Reservation should exist.
-                    count <- query @Reservation |> fetchCount
-                    count `shouldBe` 1
+                -- Only one Reservation should exist.
+                count <- query @Reservation |> fetchCount
+                count `shouldBe` 1
 
                 -- -- Create a second Reservation.
                 -- let secondParams =
