@@ -36,11 +36,9 @@ tests = aroundAll (withIHPApp WebApplication config) do
                         |> set #libraryId (get #id library)
                         |> create
 
-                let (Id uuid) = get #id libraryOpening
-
                 let params =
                         [ ("studentIdentifier", "1234")
-                        , ("libraryOpening", cs uuid)
+                        , ("libraryOpening", cs $ show $ get #id libraryOpening)
                         ]
 
 
