@@ -8,6 +8,8 @@ import Web.View.Reservations.Show
 import Web.Mail.Reservations.Confirmation
 import Data.Either (isLeft)
 import Data.Text (length)
+import Data.Char (isDigit)
+import Data.Foldable (any)
 
 instance Controller ReservationsController where
     action ReservationsAction {..} = do
@@ -93,3 +95,4 @@ studentIdentifierResult val =
     rightVal
         >>= (\val ->  if "0000" `isPrefixOf` val then Left "Prefix of 0000 is not allowed" else rightVal)
         >>= (\val -> if Data.Text.length val < 3 then Left "ID shorter than 3" else rightVal)
+        >>= (\val -> if Data.Foldable.any (not . isDigit) (cs val::String) then Left "ID should only be consisted of digits" else rightVal)
