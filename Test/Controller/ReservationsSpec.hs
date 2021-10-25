@@ -15,7 +15,7 @@ import Config
 import Generated.Types
 import Web.Routes
 import Web.Types
-import Web.Controller.Reservations ()
+import Web.Controller.Reservations (studentIdentifierResult)
 import Web.FrontController ()
 import Network.Wai
 import IHP.ControllerPrelude
@@ -24,7 +24,7 @@ tests :: Spec
 tests = aroundAll (withIHPApp WebApplication config) do
         describe "ReservationsController" $ do
 
-            it "creates two new reservations" $  withContext do
+            it "creates two new reservations" $ withContext do
                 -- Create Library.
                 library <- newRecord @Library
                         |> set #title "Lib 1"
@@ -61,6 +61,16 @@ tests = aroundAll (withIHPApp WebApplication config) do
                 -- Only one Reservation should exist.
                 count <- query @Reservation |> fetchCount
                 count `shouldBe` 2
+
+        it "accepts valid student identifiers" $ withContext do
+            let ids =
+                    [ "0012"
+                    , "1245"
+                    , "9999999"
+                    ]
+            forEach ids (\id -> studentIdentifierResult id `shouldBe` Right id)
+
+
 
 
 
