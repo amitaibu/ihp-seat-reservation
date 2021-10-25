@@ -24,8 +24,8 @@ tests :: Spec
 tests = aroundAll (withIHPApp WebApplication config) do
         describe "ReservationsController" $ do
 
-
             it "creates two new reservations" $  withContext do
+                -- Create Library.
                 library <- newRecord @Library
                         |> set #title "Lib 1"
                         |> set #totalNumberOfSeats 3
@@ -44,11 +44,12 @@ tests = aroundAll (withIHPApp WebApplication config) do
                         ]
 
 
-                response <- callAction CreateReservationAction
+                withParams params $ do
+                    response <- callAction CreateReservationAction
 
-                -- Only one Reservation should exist.
-                count <- query @Reservation |> fetchCount
-                count `shouldBe` 1
+                    -- Only one Reservation should exist.
+                    count <- query @Reservation |> fetchCount
+                    count `shouldBe` 1
 
                 -- -- Create a second Reservation.
                 -- let secondParams =
@@ -62,6 +63,6 @@ tests = aroundAll (withIHPApp WebApplication config) do
                 --     -- Only one Reservation should exist.
                 --     count <- query @Reservation |> fetchCount
                 --     count `shouldBe` 2
-             -- Create Library.
+
 
 
