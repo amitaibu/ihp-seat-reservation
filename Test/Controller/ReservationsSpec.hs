@@ -19,10 +19,19 @@ import Web.Controller.Reservations (studentIdentifierResult)
 import Web.FrontController ()
 import Network.Wai
 import IHP.ControllerPrelude
+import Application.Script.Prelude (JobStatus(JobStatusNotStarted))
+import IHP.MailPrelude (JobStatus(JobStatusSucceeded))
 
 tests :: Spec
 tests = aroundAll (withIHPApp WebApplication config) do
         describe "ReservationsController" $ do
+            it "has no existing reservations" $ withContext do
+                count <- query @Reservation |> fetchCount
+                count `shouldBe` 0
+
+            it "has no existing reservations jobs" $ withContext do
+                count <- query @ReservationJob |> fetchCount
+                count `shouldBe` 0
 
             it "creates two new reservations" $ withContext do
                 -- Create Library.
@@ -36,7 +45,7 @@ tests = aroundAll (withIHPApp WebApplication config) do
                         |> set #libraryId (get #id library)
                         |> create
 
-                let libraryOpeningId = cs $ show $ get #id libraryOpening
+                let libraryOpeningId = cs $ tshow $ get #id libraryOpening
 
                 let params =
                         [ ("studentIdentifier", "1234")
@@ -45,22 +54,22 @@ tests = aroundAll (withIHPApp WebApplication config) do
 
                 response <- callActionWithParams CreateReservationAction params
 
-                -- Only one Reservation should exist.
+                -- Only one Reservation and Reservation Job should exist.
                 count <- query @Reservation |> fetchCount
                 count `shouldBe` 1
 
-                -- Create a second Reservation.
-                let secondParams =
-                        [ ("studentIdentifier", "4567")
-                        , ("libraryOpeningId", libraryOpeningId)
-                        ]
+                count <- query @ReservationJob |> fetchCount
+                count `shouldBe` 1
 
+                reservationJob <- query @ReservationJob |> orderByDesc #createdAt |> fetchOne
+                get #status reservationJob `shouldBe` JobStatusNotStarted
 
-                response <- callActionWithParams CreateReservationAction secondParams
+                -- Process job.
+                perform reservationJob
 
-                -- Only one Reservation should exist.
-                count <- query @Reservation |> fetchCount
-                count `shouldBe` 2
+                reservationJob <- fetch (get #id reservationJob)
+                get #status reservationJob `shouldBe` JobStatusSucceeded
+
 
         it "accepts valid student identifiers" $ withContext do
             let ids =
