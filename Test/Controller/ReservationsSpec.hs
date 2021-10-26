@@ -85,8 +85,3 @@ tests = aroundAll (withIHPApp WebApplication config) do
                     , "9999999"
                     ]
             forEach ids (\id -> studentIdentifierResult id `shouldBe` Right id)
-
-
-
-
-
