@@ -22,6 +22,7 @@ import IHP.ControllerPrelude
 import Application.Script.Prelude (JobStatus(JobStatusNotStarted))
 import IHP.MailPrelude (JobStatus(JobStatusSucceeded))
 import Web.Job.Reservation
+import Generated.Types (Reservation'(seatNumber))
 
 tests :: Spec
 tests = aroundAll (withIHPApp WebApplication config) do
@@ -63,14 +64,18 @@ tests = aroundAll (withIHPApp WebApplication config) do
                 count `shouldBe` 1
 
                 reservationJob <- query @ReservationJob |> orderByDesc #createdAt |> fetchOne
-                get #status reservationJob `shouldBe` JobStatusNotStarted
+                reservation <- fetch (get #reservationId reservationJob)
+                -- Seat not assigned yet.
+                get #seatNumber reservation `shouldBe` 0
+
 
                 -- Process job.
                 let frameworkConfig = getFrameworkConfig ?context
                 let ?context = frameworkConfig in perform reservationJob
 
-                reservationJob <- fetch (get #id reservationJob)
-                get #status reservationJob `shouldBe` JobStatusSucceeded
+                -- Reload Reservation from it.
+                reservation <- fetch (get #reservationId reservationJob)
+                get #seatNumber reservation `shouldBe` 1
 
 
         it "accepts valid student identifiers" $ withContext do
