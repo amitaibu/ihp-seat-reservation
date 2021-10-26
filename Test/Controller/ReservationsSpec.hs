@@ -21,6 +21,7 @@ import Network.Wai
 import IHP.ControllerPrelude
 import Application.Script.Prelude (JobStatus(JobStatusNotStarted))
 import IHP.MailPrelude (JobStatus(JobStatusSucceeded))
+import Web.Job.Reservation
 
 tests :: Spec
 tests = aroundAll (withIHPApp WebApplication config) do
@@ -65,7 +66,8 @@ tests = aroundAll (withIHPApp WebApplication config) do
                 get #status reservationJob `shouldBe` JobStatusNotStarted
 
                 -- Process job.
-                perform reservationJob
+                let frameworkConfig = getFrameworkConfig ?context
+                let ?context = frameworkConfig in perform reservationJob
 
                 reservationJob <- fetch (get #id reservationJob)
                 get #status reservationJob `shouldBe` JobStatusSucceeded
